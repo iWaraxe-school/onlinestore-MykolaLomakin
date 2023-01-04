@@ -12,7 +12,6 @@
         <module>store</module>
         <module>consoleApp</module>
         <module>domain</module>
-        <module>store</module>
     </modules>
 
 
