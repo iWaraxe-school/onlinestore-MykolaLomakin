@@ -1,15 +1,13 @@
 package products;
 
-import java.math.BigDecimal;
-
 public class Product {
 
     private final String name;
     private final double rate;
-    private final BigDecimal price;
+    private final double price;
 
 
-    public Product(String name, double rate, BigDecimal price) {
+    public Product(String name, double rate, double price) {
         this.name = name;
         this.rate = rate;
         this.price = price;
@@ -23,7 +21,18 @@ public class Product {
         return rate;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
+    }
+
+    public void setProduct() {
+        System.out.println("Name: " + getName() + ";  " +
+                "Price: " + getPrice() + ";  " +
+                "Rate: " + getRate() + ";");
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Product name: '%s', Product rate: '%s', Product price: '%s'", name, rate, price);
     }
 }
