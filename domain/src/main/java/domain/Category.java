@@ -22,4 +22,11 @@ import java.util.List;
             }
             productList.add(product);
         }
+
+     public void printCategory() {
+         System.out.println(categoryName + ":");
+         for (Product product : productList) {
+             product.setProduct();
+         }
+     }
 }
