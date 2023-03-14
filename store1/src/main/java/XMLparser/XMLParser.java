@@ -11,9 +11,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class XMLParser {
-    public static final String XMLPATH = "src/main/resources/config.xml";
+    public static final String XMLPATH = "store1/src/main/resources/config.xml";
 
-    public Map<String, String> fieldSortOrderMap() {
+    public static Map<String, String> fieldSortOrderMap() {
         Map<String, String> fieldSortDirectionMap = new LinkedHashMap<>();
 
         try {
