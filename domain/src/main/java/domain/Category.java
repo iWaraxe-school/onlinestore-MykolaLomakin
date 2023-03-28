@@ -1,7 +1,7 @@
 package domain;
 
 import products.Product;
-import store.Comparator.ProductComparator;
+import store.Comparator.MultiFieldComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +29,24 @@ import java.util.List;
         }
 
      public void printCategory() {
-         System.out.println(categoryName + ":");
+         StringBuilder sb = new StringBuilder();
+         sb.append(categoryName).append(":\n");
+
          for (Product product : productList) {
-             product.setProduct();
+             sb.append("Product Name: ").append(product.getName()).append("\n");
+             sb.append("Product Price: ").append(product.getPrice()).append("\n\n");
          }
+         System.out.println(sb);
      }
      public List<Product> getProductList() {
-         return ProductComparator.sortProductList(productList, "price");
+         String defaultSortKey = System.getProperty("defaultSortKey", "price");
+         return MultiFieldComparator.sortProductList(productList, defaultSortKey);
      }
 
      public void sort() {
          StringBuilder info = new StringBuilder();
          info.append(String.format("%s category:%n", getCategoryName()));
-         List<Product> plist = ProductComparator.sortProductList(productList, "");
+         List<Product> plist = MultiFieldComparator.sortProductList(productList, "");
          for (Product product : plist) {
              info.append(product);
          }

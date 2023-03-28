@@ -13,29 +13,25 @@ public class StoreInteraction {
         StoreHelper storeHelper = new StoreHelper(store);
         storeHelper.fillStoreRandomly();
 
-        try {
-
-            boolean console = true;
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("The store is created and filled with random products.");
-
-            while (console) {
-
-                System.out.println("The store interacts with using next commands: sort, top, quit:");
-                String command = bufferedReader.readLine();
-
-                switch (command) {
-                    case "sort" -> store.sort();
-                    case "top" -> store.top();
-                    case "quit" -> {
-                        bufferedReader.close();
-                        console = false;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+                while (true) {
+                    System.out.println("The store interacts with using next commands: sort, top, quit: ");
+                    String input = reader.readLine();
+                    if (input.equals("sort")) {
+                        store.sort();
                     }
-                    default -> System.out.println("Command is not supported.");
+                    if (input.equals("top")) {
+                        store.top();
+                    }
+                    if (input.equals("quit")) {
+                        System.out.println("Goodbye!");
+                        return;
+                    } else {
+                        System.out.println("Unknown command: " + input);
+                    }
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
         }
     }
-}
