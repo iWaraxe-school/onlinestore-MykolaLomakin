@@ -33,14 +33,15 @@ public class Store {
 
     public void sort() {
         for (Category category : categoryList) {
-            category.sort();
+            category.sort("");
         }
     }
+
 
     public void top() {
         List<Product> productList = new ArrayList<>();
         for (Category category : categoryList) {
-            productList.addAll(category.getProductList());
+            productList.addAll(category.getProductList(""));
         }
         MultiFieldComparator.sortProductList(productList, "price");
         System.out.println("Top 5 products by price:");

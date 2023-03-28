@@ -29,12 +29,14 @@ public class Category {
         return productList.size();
     }
 
-    public List<Product> getProductList() {
-        String defaultSortKey = System.getProperty("defaultSortKey", "price");
-        return MultiFieldComparator.sortProductList(productList, defaultSortKey);
+    public List<Product> getProductList(String sortKey) {
+        if (sortKey == null || sortKey.isBlank()) {
+            sortKey = "price"; // use "price" as default sort key
+        }
+        return MultiFieldComparator.sortProductList(productList, sortKey);
     }
 
-    public void sort() {
+    public void sort(String field) {
         StringBuilder info = new StringBuilder();
         info.append(String.format("%s category:%n", getCategoryName()));
         List<Product> plist = MultiFieldComparator.sortProductList(productList, "");
