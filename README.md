@@ -5,8 +5,8 @@
 [Patterns](https://refactoring.guru/design-patterns)
 
 ## VideoLectures
-	- [Patterns(part 1)](https://youtu.be/q5U92-p-a0s)
-	- [Patterns(part 2)](https://youtu.be/bR7M\_lv52S4)
+- [Patterns(part 1)](https://youtu.be/q5U92-p-a0s)
+- [Patterns(part 2)](https://youtu.be/bR7M\_lv52S4)
 
 ## Task #5
 Read all materials, try to find a `proper` place to your newly learned patterns in our app. There are a lot of design patterns, but we advise you to pay attention to the following ones:
