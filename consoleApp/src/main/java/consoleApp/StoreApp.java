@@ -1,13 +1,11 @@
 package consoleApp;
 
-import store.helpers.StoreHelper;
 import store.Store;
+import store.StoreInteraction;
 public class StoreApp {
     public static void main(String[] args) {
 
-        Store store = new Store();
-        StoreHelper helper = new StoreHelper(store);
-        helper.fillStoreRandomly();
-        store.setStore();
+        Store store = Store.getInstance();
+        StoreInteraction.execStoreInteraction(store);
     }
 }

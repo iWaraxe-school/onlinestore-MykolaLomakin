@@ -11,11 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
 public class StoreHelper {
-    Store store;
+    static Store store;
 
     public StoreHelper(Store store) {
-        this.store = store;
+        StoreHelper.store = store;
     }
 
     public void fillStoreRandomly() {
@@ -32,7 +33,7 @@ public class StoreHelper {
                         populator.getProductPrice());
                 entry.getKey().addProduct(product);
             }
-            this.store.addCategoryToStore(entry.getKey());
+            store.addCategoryToStore(entry.getKey());
         }
     }
 

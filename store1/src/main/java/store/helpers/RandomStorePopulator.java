@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 
 public class RandomStorePopulator {
     private final Faker faker = new Faker();
+
     public String getProductName(String categoryName) {
         switch (categoryName) {
             case "Bike":
@@ -22,7 +23,7 @@ public class RandomStorePopulator {
     }
 
     public Double getProductRate() {
-        return faker.number().randomDouble(1,1,100);
+        return faker.number().randomDouble(1, 1, 100);
     }
 
 }
