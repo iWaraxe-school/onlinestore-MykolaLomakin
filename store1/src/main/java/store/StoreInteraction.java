@@ -23,7 +23,7 @@ public class StoreInteraction {
                     if (input.equals("top")) {
                         store.top();
                     }
-                    if (input.equals("quit")) {
+                    else if (input.equals("quit")) {
                         System.out.println("Goodbye!");
                         return;
                     } else {
