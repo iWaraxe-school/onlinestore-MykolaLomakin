@@ -33,7 +33,7 @@ public class Store {
 
     public void sort() {
         for (Category category : categoryList) {
-            category.sort("");
+            category.sort();
         }
     }
 

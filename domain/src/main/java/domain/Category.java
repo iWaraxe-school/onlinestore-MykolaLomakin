@@ -36,7 +36,7 @@ public class Category {
         return MultiFieldComparator.sortProductList(productList, sortKey);
     }
 
-    public void sort(String field) {
+    public void sort() {
         StringBuilder info = new StringBuilder();
         info.append(String.format("%s category:%n", getCategoryName()));
         List<Product> plist = MultiFieldComparator.sortProductList(productList, "");
