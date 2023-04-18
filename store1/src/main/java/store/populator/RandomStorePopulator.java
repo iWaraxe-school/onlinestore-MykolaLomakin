@@ -1,10 +1,12 @@
-package store.helpers;
+package store.populator;
 
 import com.github.javafaker.Faker;
+import products.Product;
 
-public class RandomStorePopulator {
+public class RandomStorePopulator implements Populator {
     private final Faker faker = new Faker();
 
+    @Override
     public String getProductName(String categoryName) {
         switch (categoryName) {
             case "Bike":
@@ -18,10 +20,12 @@ public class RandomStorePopulator {
         }
     }
 
+    @Override
     public Double getProductPrice() {
         return faker.number().randomDouble(1, 1, 100000);
     }
 
+    @Override
     public Double getProductRate() {
         return faker.number().randomDouble(1, 1, 100);
     }

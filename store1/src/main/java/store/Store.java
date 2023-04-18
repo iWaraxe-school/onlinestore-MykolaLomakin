@@ -7,7 +7,7 @@ import store.Comparator.MultiFieldComparator;
 import java.util.ArrayList;
 import java.util.List;
 public class Store {
-    public final List<Category> categoryList;
+    private final List<Category> categoryList;
 
     private static Store storeInstance;
 
@@ -19,16 +19,16 @@ public class Store {
         categoryList.add(category);
     }
 
+    //singleton pattern
     public static Store getInstance() {
-        if (storeInstance != null) {
-            return storeInstance;
-        }
-        synchronized (Store.class) {
-            if (storeInstance == null) {
-                storeInstance = new Store();
+        if (storeInstance == null) {
+            synchronized (Store.class) {
+                if (storeInstance == null) {
+                    storeInstance = new Store();
+                }
             }
-            return storeInstance;
         }
+        return storeInstance;
     }
 
     public void sort() {

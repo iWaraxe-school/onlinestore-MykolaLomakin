@@ -1,13 +1,46 @@
 package products;
 
+import store.populator.RandomStorePopulator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
+    private String name;
+    private double rate;
+    private double price;
 
-    private final String name;
-    private final double rate;
-    private final double price;
+    //add builder
+    public static ProductBuilder newProductBuilder() {
+        return new ProductBuilder();
+    }
 
+    public static class ProductBuilder {
+        private String name;
+        private double rate;
+        private double price;
 
-    public Product(String name, double rate, double price) {
+        public ProductBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ProductBuilder setRate(double rate) {
+            this.rate = rate;
+            return this;
+        }
+
+        public ProductBuilder setPrice(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(name, rate, price);
+        }
+    }
+
+    private Product(String name, double rate, double price) {
         this.name = name;
         this.rate = rate;
         this.price = price;
@@ -23,12 +56,6 @@ public class Product {
 
     public double getPrice() {
         return price;
-    }
-
-    public void setProduct() {
-        System.out.println("Name: " + getName() + ";  " +
-                "Price: " + getPrice() + ";  " +
-                "Rate: " + getRate() + ";");
     }
 
     @Override
