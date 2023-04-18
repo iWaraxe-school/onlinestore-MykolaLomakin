@@ -28,10 +28,11 @@ public class StoreHelper {
         for (Map.Entry<Category, Integer> entry : categoryProductsMapToAdd.entrySet()) {
             for (int i = 0; i < entry.getValue(); i++) {
 
-                Product product = new Product(
-                        populator.getProductName(entry.getKey().getCategoryName()),
-                        populator.getProductRate(),
-                        populator.getProductPrice());
+                Product product = Product.newProductBuilder()
+                        .setName(populator.getProductName(entry.getKey().getCategoryName()))
+                        .setRate(populator.getProductRate())
+                        .setPrice(populator.getProductPrice())
+                        .build();
                 entry.getKey().addProduct(product);
             }
             store.addCategoryToStore(entry.getKey());
