@@ -19,6 +19,7 @@ public class Store {
         categoryList.add(category);
     }
 
+    //singleton pattern
     public static Store getInstance() {
         if (storeInstance != null) {
             return storeInstance;
