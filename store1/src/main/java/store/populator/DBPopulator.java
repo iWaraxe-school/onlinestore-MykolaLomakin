@@ -1,5 +1,6 @@
 package store.populator;
 
+//TODO will be extended in feature implementations
 public class DBPopulator implements Populator {
     @Override
     public String getProductName(String categoryName) {

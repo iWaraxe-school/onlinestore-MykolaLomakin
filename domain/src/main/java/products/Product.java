@@ -6,17 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
-
     private String name;
     private double rate;
     private double price;
 
     //add builder
     public static ProductBuilder newProductBuilder() {
-        return new Product().new ProductBuilder();
+        return new ProductBuilder();
     }
 
-    public class ProductBuilder {
+    public static class ProductBuilder {
         private String name;
         private double rate;
         private double price;
@@ -26,22 +25,25 @@ public class Product {
             return this;
         }
 
-        public ProductBuilder setPrice(double price) {
-            this.price = price;
-            return this;
-        }
-
         public ProductBuilder setRate(double rate) {
             this.rate = rate;
             return this;
         }
 
-        public Product build() {
-            Product.this.name = this.name;
-            Product.this.price = this.price;
-            Product.this.rate = this.rate;
-            return Product.this;
+        public ProductBuilder setPrice(double price) {
+            this.price = price;
+            return this;
         }
+
+        public Product build() {
+            return new Product(name, rate, price);
+        }
+    }
+
+    private Product(String name, double rate, double price) {
+        this.name = name;
+        this.rate = rate;
+        this.price = price;
     }
 
     public String getName() {
@@ -54,12 +56,6 @@ public class Product {
 
     public double getPrice() {
         return price;
-    }
-
-    public void setProduct() {
-        System.out.println("Name: " + getName() + ";  " +
-                "Price: " + getPrice() + ";  " +
-                "Rate: " + getRate() + ";");
     }
 
     @Override

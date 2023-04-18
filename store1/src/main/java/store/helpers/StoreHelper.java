@@ -5,6 +5,7 @@ import domain.Category;
 import org.reflections.Reflections;
 import products.Product;
 import store.Store;
+import store.populator.Populator;
 import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,20 +15,23 @@ import java.util.Random;
 import java.util.Set;
 
 public class StoreHelper {
-    static Store store;
+    private Store store;
+    private Populator populator;
 
     public StoreHelper(Store store) {
-        StoreHelper.store = store;
+        this(store, new RandomStorePopulator());
+    }
+
+    public StoreHelper(Store store, Populator populator) {
+        this.store = store;
+        this.populator = populator;
     }
 
     public void fillStoreRandomly() {
-
-        RandomStorePopulator populator = new RandomStorePopulator();
         Map<Category, Integer> categoryProductsMapToAdd = createProductListToAdd();
 
         for (Map.Entry<Category, Integer> entry : categoryProductsMapToAdd.entrySet()) {
             for (int i = 0; i < entry.getValue(); i++) {
-
                 Product product = Product.newProductBuilder()
                         .setName(populator.getProductName(entry.getKey().getCategoryName()))
                         .setRate(populator.getProductRate())

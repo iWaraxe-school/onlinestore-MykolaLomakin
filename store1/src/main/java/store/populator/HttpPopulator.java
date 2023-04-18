@@ -1,6 +1,7 @@
 package store.populator;
 
-public class HttpPopulator implements Populator{
+//TODO will be extended in feature implementations
+public class HttpPopulator implements Populator {
     @Override
     public String getProductName(String categoryName) {
         return null;
