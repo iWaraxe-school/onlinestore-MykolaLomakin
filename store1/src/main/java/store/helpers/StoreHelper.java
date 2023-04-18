@@ -5,6 +5,7 @@ import domain.Category;
 import org.reflections.Reflections;
 import products.Product;
 import store.Store;
+import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
