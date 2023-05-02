@@ -43,11 +43,6 @@ public class StoreHelper {
         }
     }
 
-    public Product getRandomProductFromStore() {
-        Random random = new Random();
-        return allProducts.get(random.nextInt(allProducts.size()));
-    }
-
     private static Map<Category, Integer> createProductListToAdd() {
         Map<Category, Integer> productToAdd = new HashMap<>();
 
