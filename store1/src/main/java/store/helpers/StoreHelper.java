@@ -15,8 +15,6 @@ public class StoreHelper {
     private Store store;
     private Populator populator;
 
-    private List<Product> allProducts;
-
     public StoreHelper(Store store) {
         this(store, new RandomStorePopulator());
     }
@@ -24,7 +22,6 @@ public class StoreHelper {
     public StoreHelper(Store store, Populator populator) {
         this.store = store;
         this.populator = populator;
-        this.allProducts = new ArrayList<>();
     }
 
     public void fillStoreRandomly() {
