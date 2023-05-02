@@ -3,6 +3,7 @@ package store;
 import domain.Category;
 import products.Product;
 import store.Comparator.MultiFieldComparator;
+import store.populator.RandomStorePopulator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,5 +49,14 @@ public class Store {
         for (int i = 0; i < 5; i++) {
             System.out.println(productList.get(i));
         }
+    }
+
+    public Product getRandomProductFromStore() {
+        RandomStorePopulator products = new RandomStorePopulator();
+        return new Product.ProductBuilder()
+                .setName(products.getProductName("Bike"))
+                .setRate(products.getProductRate())
+                .setPrice(products.getProductPrice())
+                .build();
     }
 }

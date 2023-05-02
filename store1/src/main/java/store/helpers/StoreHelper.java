@@ -9,14 +9,13 @@ import store.populator.Populator;
 import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class StoreHelper {
     private Store store;
     private Populator populator;
+
+    private List<Product> allProducts;
 
     public StoreHelper(Store store) {
         this(store, new RandomStorePopulator());
@@ -25,6 +24,7 @@ public class StoreHelper {
     public StoreHelper(Store store, Populator populator) {
         this.store = store;
         this.populator = populator;
+        this.allProducts = new ArrayList<>();
     }
 
     public void fillStoreRandomly() {
@@ -43,6 +43,11 @@ public class StoreHelper {
         }
     }
 
+    public Product getRandomProductFromStore() {
+        Random random = new Random();
+        return allProducts.get(random.nextInt(allProducts.size()));
+    }
+
     private static Map<Category, Integer> createProductListToAdd() {
         Map<Category, Integer> productToAdd = new HashMap<>();
 
@@ -50,11 +55,9 @@ public class StoreHelper {
         Set<Class<? extends Category>> subTypes = reflections.getSubTypesOf(Category.class);
 
         for (Class<? extends Category> type : subTypes) {
-
             try {
                 Random random = new Random();
                 productToAdd.put(type.getConstructor().newInstance(), random.nextInt(10) + 1);
-
             } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 throw new RuntimeException(e);
