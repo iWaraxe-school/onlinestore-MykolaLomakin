@@ -1,36 +1,31 @@
-## 6. Multithreading
-### Materials
+# 7. DB
 
-[Concurrency](https://docs.oracle.com/javase/tutorial/essential/concurrency/)
-[L10 from slide 24](https://drive.google.com/file/d/1lQorg4OeGddgLf54a3NaSKCe3NbPKWXN/view?usp=sharing) 
-[L11 from](https://drive.google.com/file/d/1hK3FwY2zJG0ChY3phqA2UlqJW15lZf\_O/view?usp=sharing) 
+----
+## Materials
 
-### VideoLectures
-- [Multithreading, part 1](https://youtu.be/fH7Yb9HnK3Q)
-- [Multithreading, part 2](https://youtu.be/RxrtmHPnOo0)
+[H2 Database](https://www.h2database.com/html/main.html)
 
-### Task #6
+[Very brief description](https://www.javatpoint.com/steps-to-connect-to-the-database-in-java)
 
-Please implement `create order` functionality. Each order should be processed in separate thread. Whe user select product, generate the random int from 1 to 30, and create thread that will process selected order for selected time, and after it place the product in another collection (for example, purchased goods). And create one more thread, that will be executed periodically, e.g. ones in 2 mins, that will clean up purchased collection.
+[One more](https://www.baeldung.com/java-jdbc)
 
-You can implement this in "native" java methods but better and simplier to use `java.util.concurrent` package. If you need further guidance you can look at step-by-step guides for task solutions in the Hints section.
-  
-### Hints
-#### Basic multithreading solution
-To implement multithreading in the OnlineStore app, you can create two threads: one for processing orders and another for cleaning up the purchased goods collection.
-1. Create a `Runnable` implementation for processing orders. In this implementation, you can generate a random number to select a product and process the order for a specified time. After processing the order, add the purchased product to a collection.
-2. Create a `Runnable` implementation for cleaning up the collection of the purchased goods. In this implementation, you can periodically check the collection and remove any items that have been in the collection for a certain amount of time.
-3. In the main class of the application, create instances of both `Runnable` implementations and pass them to `Thread` instances.
-4. Start the threads using the `start()` method.
-With these steps, you should have a basic multithreading implementation in the OnlineStore app. You can use any pattern or implementation you prefer to manage the creation and execution of threads.
-#### Complex multithreading solution
-1. Implement the `create order` functionality. To do this, create a class called `CreateOrderTask` that implements the `Runnable` interface. In the `run()` method of this class, generate a random integer between 1 and 30, select a random product, and process the order for the specified time. Afterward, add the product to a thread-safe `collection` such as a `ConcurrentLinkedQueue`.
-2. Create a thread pool using the `ExecutorService` class. This pool will be used to execute instances of the `CreateOrderTask` class. The pool size should be configurable, but a good default value would be the number of available processors on the system.
-3. Create a method called `startOrderProcessing()` that will submit instances of the `CreateOrderTask` class to the thread pool. This method should be called when the user selects the `create order` command.
-4. Create a class called `ClearPurchasedGoodsTask` that implements the `Runnable` interface. In the `run()` method of this class, remove all items from the thread-safe `collection` of purchased goods. Use a `ScheduledExecutorService` to schedule this task to run periodically, for example, once every two minutes.
-5. Create a thread-safe `collection` such as a `ConcurrentLinkedQueue` to store purchased goods.
-6. Modify the `create order` functionality to add the selected product to the thread-safe `collection` of purchased goods.
-7. Modify the `print` command to print the contents of the thread-safe `collection` of purchased goods.
-8. Add error handling to ensure that the application does not crash if the thread pool or scheduled executor service encounters an error. Use a `try-catch` block to catch any exceptions thrown by these classes and log the error.
-9. Add the ability to configure the thread pool size and scheduling interval via command line arguments or a configuration file. Use a `ThreadPoolExecutor` to create the thread pool and allow for custom configuration of the thread pool size and other parameters.
-10. Create a method to gracefully shut down the thread pool and scheduled executor service when the application is terminated. Use the `ExecutorService.shutdown()` method to gracefully shut down the thread pool and the `ScheduledExecutorService.shutdown()` method to shut down the scheduled executor service gracefully. Call these methods when the application is terminated, for example, when the user selects the `quit` command.
+## Task
+In this task, you will replace the current `Reflection` and in-memory products storage with a database for storing categories and products. We will be using `JDBC` for database connectivity, and you'd better use the MySQL database. But if you have any experience with other databases feel free to choose those that you're familiar with.
+
+### Objective
+
+1. Store categories and products for each category in MySQL database tables using `JDBC`.
+2. Implement different levels of difficulty for this task (simple, medium, and advanced).
+
+### Levels of Difficulty
+
+1. **Simple**: Implement basic functionality to store categories and products in the `CATEGORIES` and `PRODUCTS` tables, respectively, and print the store data to the console using a direct JDBC connection.
+2. **Medium**: Implement all methods for sorting stores, ordering products, and clearing purchased product storage. Create an additional `ORDERS` table in the database to store order information.
+3. **Advanced**: Implement the DAO pattern to provide a clean and modular solution for data access. Implement the `CategoryDao`, `ProductDao`, and `OrderDao` interfaces and their corresponding concrete classes.
+
+Choose the level of difficulty based on your current knowledge and skills.
+
+### DAO Design Pattern
+The Data Access Object (DAO) pattern is a structural pattern that allows us to isolate the application's business logic from the underlying data storage. It provides an interface to perform CRUD operations on the data storage, which can be a database, a file system, or any other storage mechanism.
+
+In this task, you'll implement the DAO pattern to create a flexible and maintainable solution for accessing the MySQL database.
