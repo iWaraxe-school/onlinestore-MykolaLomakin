@@ -8,9 +8,11 @@ import java.util.concurrent.TimeUnit;
 public class CreateOrder implements Runnable {
 
     private final Product product;
+    private final ProductAddedCallback callback;
 
-    public CreateOrder(Product product) {
+    public CreateOrder(Product product, ProductAddedCallback callback) {
         this.product = product;
+        this.callback = callback;
     }
 
     @Override
@@ -19,8 +21,7 @@ public class CreateOrder implements Runnable {
         System.out.printf("Thread name: %s%n", threadName);
         Product purchasedProduct = product;
         System.out.println("Ordered product: " + purchasedProduct);
-        ProductStorage.getInstance().addPurchasedProduct(purchasedProduct);
-        ProductStorage.getInstance().printPurchasedProducts();
+        callback.onProductAdded(purchasedProduct);
 
         try {
             TimeUnit.SECONDS.sleep(new Random().nextInt(30) + 1);

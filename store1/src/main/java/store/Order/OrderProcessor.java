@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class OrderProcessor {
+public class OrderProcessor implements ProductAddedCallback {
     private static final int THREAD_POOL_SIZE = 10;
     private static final long CLEANUP_INTERVAL = 120;
 
@@ -26,12 +26,18 @@ public class OrderProcessor {
     }
 
     public void processOrder(Product product) {
-        CreateOrder createOrder = new CreateOrder(product);
+        CreateOrder createOrder = new CreateOrder(product, this);
         executorService.submit(createOrder);
     }
 
     public void startPeriodicCleanup() {
         ClearOrder clearOrder = new ClearOrder();
         scheduledExecutorService.scheduleAtFixedRate(clearOrder, 0, CLEANUP_INTERVAL, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void onProductAdded(Product product) {
+        ProductStorage.getInstance().addPurchasedProduct(product);
+        ProductStorage.getInstance().printPurchasedProducts();
     }
 }
