@@ -3,6 +3,7 @@ package store;
 import domain.Category;
 import products.Product;
 import store.Comparator.MultiFieldComparator;
+import store.Order.OrderProcessor;
 import store.populator.RandomStorePopulator;
 
 import java.util.ArrayList;
@@ -48,6 +49,15 @@ public class Store {
         System.out.println("Top 5 products by price:");
         for (int i = 0; i < 5; i++) {
             System.out.println(productList.get(i));
+        }
+    }
+
+    public void order() {
+        Product product = getRandomProductFromStore();
+        if (product != null) {
+            OrderProcessor.getInstance().processOrder(product);
+        } else {
+            System.out.println("No products available for order.");
         }
     }
 

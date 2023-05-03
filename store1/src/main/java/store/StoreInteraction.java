@@ -22,14 +22,7 @@ public class StoreInteraction {
                 switch (input) {
                     case "sort" -> store.sort();
                     case "top" -> store.top();
-                    case "order" -> {
-                        Product product = store.getRandomProductFromStore();
-                        if (product != null) {
-                            OrderProcessor.getInstance().processOrder(product);
-                        } else {
-                            System.out.println("No products available for order.");
-                        }
-                    }
+                    case "order" -> store.order();
                     case "quit" -> {
                         System.out.println("Goodbye!");
                         return;
