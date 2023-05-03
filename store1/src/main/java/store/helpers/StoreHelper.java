@@ -9,10 +9,7 @@ import store.populator.Populator;
 import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class StoreHelper {
     private Store store;
@@ -50,11 +47,9 @@ public class StoreHelper {
         Set<Class<? extends Category>> subTypes = reflections.getSubTypesOf(Category.class);
 
         for (Class<? extends Category> type : subTypes) {
-
             try {
                 Random random = new Random();
                 productToAdd.put(type.getConstructor().newInstance(), random.nextInt(10) + 1);
-
             } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 throw new RuntimeException(e);

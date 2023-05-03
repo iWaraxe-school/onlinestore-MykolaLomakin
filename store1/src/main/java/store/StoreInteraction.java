@@ -1,5 +1,7 @@
 package store;
 
+import products.Product;
+import store.Order.OrderProcessor;
 import store.helpers.StoreHelper;
 
 import java.io.BufferedReader;
@@ -13,25 +15,23 @@ public class StoreInteraction {
         StoreHelper storeHelper = new StoreHelper(store);
         storeHelper.fillStoreRandomly();
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-                while (true) {
-                    System.out.println("The store interacts with using next commands: sort, top, quit: ");
-                    String input = reader.readLine();
-                    if (input.equals("sort")) {
-                        store.sort();
-                    }
-                    if (input.equals("top")) {
-                        store.top();
-                    }
-                    else if (input.equals("quit")) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            while (true) {
+                System.out.println("The store interacts with using next commands: sort, top, order, quit: ");
+                String input = reader.readLine();
+                switch (input) {
+                    case "sort" -> store.sort();
+                    case "top" -> store.top();
+                    case "order" -> store.order();
+                    case "quit" -> {
                         System.out.println("Goodbye!");
                         return;
-                    } else {
-                        System.out.println("Unknown command: " + input);
                     }
+                    default -> System.out.println("Unknown command: " + input);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+}
