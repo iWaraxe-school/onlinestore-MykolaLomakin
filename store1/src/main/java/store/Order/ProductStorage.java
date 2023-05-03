@@ -1,6 +1,7 @@
 package store.Order;
 
 import products.Product;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ProductStorage {
@@ -21,34 +22,30 @@ public class ProductStorage {
         purchasedProductQueue.add(product);
     }
 
-    public void clearPurchasedProductList() {
-        purchasedProductQueue.clear();
-    }
-
     public void printPurchasedProducts() {
         System.out.println("-----------------------------");
-        System.out.println("Products are added to Queue:");
+        System.out.println("Products are added to List:");
         int index = 0;
         for (Product product : purchasedProductQueue) {
             index++;
             System.out.println(index + ": " + product);
         }
         System.out.println("-----------------------------");
-        System.out.println(index + " products are in the Queue");
+        System.out.println(index + " products are in the List");
         System.out.println("-----------------------------");
     }
 
-    public void printClearedList() {
+    public void clearPurchasedProductList() {
         System.out.println("-----------------------------");
-        System.out.println("Product was removed from the Queue");
-        Product product = purchasedProductQueue.poll();
-        if (product != null) {
-            System.out.println(product);
-        } else {
-            System.out.println("Queue is empty");
+        System.out.println("Products removed from the Queue:");
+        Product product;
+        int removedCount = 0;
+        while ((product = purchasedProductQueue.poll()) != null) {
+            removedCount++;
+            System.out.println(removedCount + ": " + product);
         }
         System.out.println("-----------------------------");
-        System.out.println(purchasedProductQueue.size() + " products are in the Queue");
+        System.out.println(removedCount + " products removed from the Queue");
         System.out.println("-----------------------------");
     }
 }
