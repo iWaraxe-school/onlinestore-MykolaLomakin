@@ -40,7 +40,7 @@ public class Product {
         }
     }
 
-    private Product(String name, double rate, double price) {
+    public Product(String name, double rate, double price) {
         this.name = name;
         this.rate = rate;
         this.price = price;
