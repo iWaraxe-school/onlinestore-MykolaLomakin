@@ -1,31 +1,26 @@
-# 7. DB
-
+# 8. HTTP
 ----
 ## Materials
+[HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
+[HTTP simple servers (plain java/lib)](https://syntaxcorrect.com/Java/5_Ultra_Lightweight_Http_Server_Implementations_in_Java_for_Blazing_Fast_Microservices_APIs_or_Even_Websites)
+[Basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
+[RestAssured](https://rest-assured.io/)
+## Task #8: Implementing an HTTP Server for Store Management
 
-[H2 Database](https://www.h2database.com/html/main.html)
-
-[Very brief description](https://www.javatpoint.com/steps-to-connect-to-the-database-in-java)
-
-[One more](https://www.baeldung.com/java-jdbc)
-
-## Task
-In this task, you will replace the current `Reflection` and in-memory products storage with a database for storing categories and products. We will be using `JDBC` for database connectivity, and you'd better use the MySQL database. But if you have any experience with other databases feel free to choose those that you're familiar with.
+In this task, you will build upon the previous task by implementing an HTTP server to manage your store's categories and products. You will also add the functionality to handle adding products to the cart, and secure the server using basic authentication.
 
 ### Objective
 
-1. Store categories and products for each category in MySQL database tables using `JDBC`.
-2. Implement different levels of difficulty for this task (simple, medium, and advanced).
+1. Implement an HTTP server that handles category and product management using the HTTP protocol.
+2. Implement 'add product to cart' functionality in the server.
+3. Secure the HTTP service with basic authentication (hardcoded credentials are acceptable).
+4. Use either Java's built-in HTTP client or the RestAssured library for the client-side implementation.
 
-### Levels of Difficulty
+### Subtasks
 
-1. **Simple**: Implement basic functionality to store categories and products in the `CATEGORIES` and `PRODUCTS` tables, respectively, and print the store data to the console using a direct JDBC connection.
-2. **Medium**: Implement all methods for sorting stores, ordering products, and clearing purchased product storage. Create an additional `ORDERS` table in the database to store order information.
-3. **Advanced**: Implement the DAO pattern to provide a clean and modular solution for data access. Implement the `CategoryDao`, `ProductDao`, and `OrderDao` interfaces and their corresponding concrete classes.
+1. **HTTP Server Setup**: Implement an HTTP server using Java's built-in HTTP server or an external library. The server should be capable of handling requests for adding, updating, retrieving, and deleting categories and products in your store's database.
+2. **Add Product to Cart**: Implement a feature that allows users to add products to their cart using an HTTP request. The server should process this request, update the cart, and return a confirmation message.
+3. **Basic Authentication**: Secure your HTTP server using basic authentication. Hardcoded credentials are acceptable for this task. Ensure that only authenticated users can access the server's features.
+4. **HTTP Client**: Implement the client-side part of your application using either Java's built-in HTTP client or the RestAssured library. The client should be capable of sending requests to the server and processing the server's responses.
 
-Choose the level of difficulty based on your current knowledge and skills.
-
-### DAO Design Pattern
-The Data Access Object (DAO) pattern is a structural pattern that allows us to isolate the application's business logic from the underlying data storage. It provides an interface to perform CRUD operations on the data storage, which can be a database, a file system, or any other storage mechanism.
-
-In this task, you'll implement the DAO pattern to create a flexible and maintainable solution for accessing the MySQL database.
+By breaking down the task into these clear and concise subtasks, you will have a better understanding of the requirements and be able to tackle each part of the challenge more effectively. Good luck!
