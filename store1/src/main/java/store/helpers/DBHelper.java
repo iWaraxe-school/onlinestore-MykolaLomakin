@@ -212,11 +212,11 @@ public class DBHelper {
             statement.setInt(1, categoryID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int productID = resultSet.getInt("ID");
-                String name = resultSet.getString("NAME");
-                double rate = resultSet.getDouble("RATE");
-                double price = resultSet.getDouble("PRICE");
-                Product product = new Product(name, rate, price);
+                resultSet.getInt("ID");
+                resultSet.getString("NAME");
+                resultSet.getDouble("RATE");
+                resultSet.getDouble("PRICE");
+                Product product = Product.newProductBuilder().build();
                 productList.add(product);
             }
         } catch (SQLException e) {
@@ -230,10 +230,10 @@ public class DBHelper {
             List<Product> productList = new ArrayList<>();
             ResultSet resultSet = STATEMENT.executeQuery("SELECT * FROM PRODUCTS");
             while (resultSet.next()) {
-                String name = resultSet.getString("NAME");
-                double rate = resultSet.getDouble("RATE");
-                double price = resultSet.getDouble("PRICE");
-                Product product = new Product(name, rate, price);
+                resultSet.getString("NAME");
+                resultSet.getDouble("RATE");
+                resultSet.getDouble("PRICE");
+                Product product = Product.newProductBuilder().build();
                 productList.add(product);
             }
 
