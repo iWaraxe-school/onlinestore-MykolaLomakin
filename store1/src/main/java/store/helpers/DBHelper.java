@@ -212,11 +212,15 @@ public class DBHelper {
             statement.setInt(1, categoryID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                resultSet.getInt("ID");
-                resultSet.getString("NAME");
-                resultSet.getDouble("RATE");
-                resultSet.getDouble("PRICE");
-                Product product = Product.newProductBuilder().build();
+                String name = resultSet.getString("NAME");
+                double rate = resultSet.getDouble("RATE");
+                double price = resultSet.getDouble("PRICE");
+                Product product = Product.newProductBuilder()
+                        .setName(name)
+                        .setRate(rate)
+                        .setPrice(price)
+                        .build();
+
                 productList.add(product);
             }
         } catch (SQLException e) {
@@ -228,16 +232,19 @@ public class DBHelper {
     public void printTopProductsByPrice(int count) {
         try {
             List<Product> productList = new ArrayList<>();
-            ResultSet resultSet = STATEMENT.executeQuery("SELECT * FROM PRODUCTS");
+            ResultSet resultSet = STATEMENT.executeQuery("SELECT * FROM PRODUCTS ORDER BY PRICE DESC");
             while (resultSet.next()) {
-                resultSet.getString("NAME");
-                resultSet.getDouble("RATE");
-                resultSet.getDouble("PRICE");
-                Product product = Product.newProductBuilder().build();
+                String name = resultSet.getString("NAME");
+                double rate = resultSet.getDouble("RATE");
+                double price = resultSet.getDouble("PRICE");
+                Product product = Product.newProductBuilder()
+                        .setName(name)
+                        .setRate(rate)
+                        .setPrice(price)
+                        .build();
                 productList.add(product);
             }
-
-            productList.sort(new MultiFieldComparator(new HashMap<>()));
+            productList.sort(new MultiFieldComparator(Collections.singletonMap("price", "asc")));
             System.out.println("Top " + count + " products by price:");
             for (int i = 0; i < count && i < productList.size(); i++) {
                 System.out.println(productList.get(i));
