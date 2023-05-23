@@ -7,17 +7,19 @@ import store.Comparator.MultiFieldComparator;
 import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DBHelper {
     private ConnectionManager connectionManager;
     private CategoryDAO categoryDAO;
     private ProductDAO productDAO;
     private OrderDAO orderDAO;
+    private final Consumer<String> printCallback;
 
-    public DBHelper() {
+    public DBHelper(Consumer<String> printCallback) throws DBException {
+        this.printCallback = printCallback;
         connectionManager = new ConnectionManager();
         Connection connection = null;
         try {
@@ -26,93 +28,129 @@ public class DBHelper {
             productDAO = new ProductDAO(connection);
             orderDAO = new OrderDAO(connection);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to establish a database connection.", e);
+            throw new DBException("Failed to establish a database connection.", e);
         }
     }
 
-    public void initializeDatabase() {
+    public void clearDB() throws DBException {
+        try {
+            orderDAO.deleteAllOrders();
+            productDAO.deleteAllProducts();
+            categoryDAO.deleteAllCategories();
+
+            printCallback.accept("Database cleared successfully!");
+        } catch (SQLException e) {
+            throw new DBException("Failed to clear the database.", e);
+        }
+    }
+
+    public void initializeDatabase() throws DBException {
         try {
             categoryDAO.createCategoryTable();
             productDAO.createProductTable();
             orderDAO.createOrdersTable();
+
+            printCallback.accept("Database initialized successfully!");
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to initialize the database.", e);
+            throw new DBException("Failed to initialize the database.", e);
         }
     }
 
-    public void fillStoreRandomly() {
+    public void fillStoreRandomly() throws DBException {
         try {
             RandomStorePopulator populator = new RandomStorePopulator();
             Map<Category, Integer> categoryMap = createCategoryMap();
-            int categoryID = 1;
-            int productID = 1;
             int quantity = 1;
 
             for (Map.Entry<Category, Integer> entry : categoryMap.entrySet()) {
-                categoryDAO.addCategory(entry.getKey());
                 Category category = entry.getKey();
-                productDAO.addProduct(categoryID, populator.getProductName(category.getCategoryName()),
-                        populator.getProductRate(), populator.getProductPrice());
-                orderDAO.addOrder(productID, quantity);
-                categoryID++;
-                productID++;
-                quantity++;
+                categoryDAO.addCategory(category);
+                int categoryId = categoryDAO.getCategoryId(category.getCategoryName());
+
+                for (int i = 0; i < entry.getValue(); i++) {
+                    Product product = populator.generateRandomProduct(category.getCategoryName());
+                    productDAO.addProduct(categoryId, product);
+                    int productId = productDAO.getProductId(product.getName());
+                    orderDAO.addOrder(productId, quantity);
+
+                    quantity++;
+                }
             }
-        } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Failed to fill the store randomly.", e);
+
+            printCallback.accept("Store filled randomly successfully!");
+        } catch (SQLException | ReflectiveOperationException e) {
+            throw new DBException("Failed to fill the store randomly.", e);
         }
     }
 
-
-    public void printFilledStore() {
+    public void printFilledStore() throws DBException {
         try {
-            List<Category> categories = categoryDAO.getAllCategories();
-            System.out.println("\nPrint Store from Database\n");
-            System.out.println("List of Categories");
-            for (Category category : categories) {
-                System.out.println(category.getCategoryName());
+            List<Category> categories;
+            List<Product> products;
+
+            try (Connection connection = connectionManager.getConnection()) {
+                categories = categoryDAO.getAllCategories(connection);
+                products = productDAO.getAllProducts(connection);
             }
 
-            List<Product> products = productDAO.getAllProducts();
-            System.out.println("List of Products");
+            printCallback.accept("\nPrint Store from Database\n");
+            printCallback.accept("List of Categories");
+            for (Category category : categories) {
+                printCallback.accept(category.getCategoryName());
+            }
+
+            printCallback.accept("List of Products");
             for (Product product : products) {
-                System.out.println(product.getName() + ", " + product.getRate() + ", " + product.getPrice());
+                printCallback.accept(product.getName() + ", " + product.getRate() + ", " + product.getPrice());
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to print the filled store.", e);
+            throw new DBException("Failed to print the filled store.", e);
         }
     }
 
-    public void sortCategories() {
+    public void sortCategories() throws DBException {
         try {
-            List<Category> categories = categoryDAO.getAllCategories();
-            for (Category category : categories) {
-                System.out.println("\nCategory: " + category.getCategoryName());
+            List<Category> categories;
 
-                List<Product> productList = productDAO.getProductsByCategoryName(category.getCategoryName());
+            try (Connection connection = connectionManager.getConnection()) {
+                categories = categoryDAO.getAllCategories(connection);
+            }
+
+            for (Category category : categories) {
+                printCallback.accept("\nCategory: " + category.getCategoryName());
+
+                List<Product> productList;
+                try (Connection connection = connectionManager.getConnection()) {
+                    productList = productDAO.getProductsByCategoryName(category.getCategoryName(), connection);
+                }
                 productList.sort(new MultiFieldComparator(new HashMap<>()));
                 for (Product product : productList) {
-                    System.out.println(product);
+                    printCallback.accept(product.toString());
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to sort categories.", e);
+            throw new DBException("Failed to sort categories.", e);
         }
     }
 
-    public void printTopProductsByPrice(int count) {
+    public void printTopProductsByPrice(int count) throws DBException {
         try {
-            List<Product> products = productDAO.getTopProductsByPrice(count);
-            System.out.println("Top " + count + " products by price:");
+            List<Product> products;
+
+            try (Connection connection = connectionManager.getConnection()) {
+                products = productDAO.getTopProductsByPrice(count, connection);
+            }
+
+            printCallback.accept("Top " + count + " products by price:");
             for (Product product : products) {
-                System.out.println(product);
+                printCallback.accept(product.toString());
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to print top products by price.", e);
+            throw new DBException("Failed to print top products by price.", e);
         }
     }
 
-    private Map<Category, Integer> createCategoryMap() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private Map<Category, Integer> createCategoryMap() throws ReflectiveOperationException {
         Map<Category, Integer> categoryToPut = new HashMap<>();
 
         Reflections reflections = new Reflections("domain.categories");
@@ -120,7 +158,7 @@ public class DBHelper {
 
         for (Class<? extends Category> type : subTypes) {
             Random random = new Random();
-            Constructor<? extends Category> constructor = type.getConstructor();
+            Constructor<? extends Category> constructor = type.getDeclaredConstructor();
             Category category = constructor.newInstance();
             categoryToPut.put(category, random.nextInt(10) + 1);
         }
@@ -128,4 +166,3 @@ public class DBHelper {
         return categoryToPut;
     }
 }
-

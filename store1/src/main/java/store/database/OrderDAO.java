@@ -37,5 +37,14 @@ public class OrderDAO {
             throw new SQLException("Failed to add order to the database.", e);
         }
     }
+
+    public void deleteAllOrders() throws SQLException {
+        String query = "DELETE FROM ORDERS";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to delete orders from the database.", e);
+        }
+    }
 }
 

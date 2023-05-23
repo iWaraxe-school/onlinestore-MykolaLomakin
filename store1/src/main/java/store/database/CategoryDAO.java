@@ -37,10 +37,10 @@ public class CategoryDAO {
         }
     }
 
-    public List<Category> getAllCategories() throws SQLException {
+    public List<Category> getAllCategories(Connection connection) throws SQLException {
         List<Category> categories = new ArrayList<>();
         String query = "SELECT * FROM CATEGORIES";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String name = resultSet.getString("NAME");
@@ -51,5 +51,28 @@ public class CategoryDAO {
             throw new SQLException("Failed to fetch categories from the database.", e);
         }
         return categories;
+    }
+
+    public void deleteAllCategories() throws SQLException {
+        String query = "DELETE FROM CATEGORIES";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to delete categories from the database.", e);
+        }
+    }
+
+    public int getCategoryId(String categoryName) throws SQLException {
+        String query = "SELECT ID FROM CATEGORIES WHERE NAME = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, categoryName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("ID");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Failed to retrieve the category ID from the database.", e);
+        }
+        throw new IllegalArgumentException("Category not found: " + categoryName);
     }
 }

@@ -4,16 +4,21 @@ import store.Order.OrderProcessor;
 import store.Store;
 import store.StoreInteraction;
 import store.database.ConnectionManager;
+import store.database.DBException;
 import store.database.DBHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class StoreApp {
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, SQLException {
+    public static void main(String[] args) throws DBException {
         Store store = Store.getInstance();
 
-        DBHelper dbHelper = new DBHelper();
+        Consumer<String> printCallback = System.out::println;
+        DBHelper dbHelper = new DBHelper(printCallback);
+        dbHelper.clearDB();
+        dbHelper.initializeDatabase();
         dbHelper.fillStoreRandomly();
         dbHelper.printFilledStore();
         dbHelper.sortCategories();

@@ -30,4 +30,28 @@ public class RandomStorePopulator implements Populator {
         return faker.number().randomDouble(1, 1, 100);
     }
 
+    public Product generateRandomProduct(String categoryName) {
+        switch (categoryName) {
+            case "Bike":
+                return Product.newProductBuilder()
+                        .setName(faker.ancient().god())
+                        .setRate(faker.number().randomDouble(1, 1, 100))
+                        .setPrice(faker.number().randomDouble(1, 1, 100000))
+                        .build();
+            case "Milk":
+                return Product.newProductBuilder()
+                        .setName(faker.food().ingredient())
+                        .setRate(faker.number().randomDouble(1, 1, 100))
+                        .setPrice(faker.number().randomDouble(1, 1, 100000))
+                        .build();
+            case "Phone":
+                return Product.newProductBuilder()
+                        .setName(faker.ancient().primordial())
+                        .setRate(faker.number().randomDouble(1, 1, 100))
+                        .setPrice(faker.number().randomDouble(1, 1, 100000))
+                        .build();
+            default:
+                throw new IllegalArgumentException("Unknown category: " + categoryName);
+        }
+    }
 }

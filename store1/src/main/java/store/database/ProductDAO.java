@@ -1,6 +1,5 @@
 package store.database;
 
-import domain.Category;
 import products.Product;
 
 import java.sql.Connection;
@@ -29,24 +28,26 @@ public class ProductDAO {
         }
     }
 
-    public void addProduct(int categoryId, String name, double rate, double price) throws SQLException {
-        String query = "INSERT INTO PRODUCTS (CATEGORY_ID, NAME, RATE, PRICE) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, categoryId);
-            statement.setString(2, name);
-            statement.setDouble(3, rate);
-            statement.setDouble(4, price);
-            statement.executeUpdate();
-            System.out.println("Product added: " + name);
+    public void addProduct(int categoryId, Product product) throws SQLException {
+        String productQuery = "INSERT INTO PRODUCTS (CATEGORY_ID, NAME, RATE, PRICE) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement productStatement = connection.prepareStatement(productQuery)) {
+            productStatement.setInt(1, categoryId);
+            productStatement.setString(2, product.getName());
+            productStatement.setDouble(3, product.getRate());
+            productStatement.setDouble(4, product.getPrice());
+            productStatement.executeUpdate();
+            System.out.println("Product added: " + product.getName());
         } catch (SQLException e) {
             throw new SQLException("Failed to add product to the database.", e);
         }
     }
 
-    public List<Product> getAllProducts() throws SQLException {
+
+    public List<Product> getAllProducts(Connection connection) throws SQLException {
         List<Product> products = new ArrayList<>();
         String query = "SELECT * FROM PRODUCTS";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String name = resultSet.getString("NAME");
@@ -65,14 +66,13 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getTopProductsByPrice(int count) throws SQLException {
+    public List<Product> getTopProductsByPrice(int count, Connection connection) throws SQLException {
         List<Product> products = new ArrayList<>();
         String query = "SELECT * FROM PRODUCTS ORDER BY PRICE DESC LIMIT ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             statement.setInt(1, count);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int categoryId = resultSet.getInt("CATEGORY_ID");
                 String name = resultSet.getString("NAME");
                 double rate = resultSet.getDouble("RATE");
                 double price = resultSet.getDouble("PRICE");
@@ -89,10 +89,10 @@ public class ProductDAO {
         return products;
     }
 
-    public List<Product> getProductsByCategoryName(String categoryName) throws SQLException {
+    public List<Product> getProductsByCategoryName(String categoryName, Connection connection) throws SQLException {
         List<Product> products = new ArrayList<>();
-        String query = "SELECT * FROM PRODUCTS WHERE CATEGORY_NAME = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        String query = "SELECT * FROM PRODUCTS WHERE CATEGORY_ID = (SELECT ID FROM CATEGORIES WHERE NAME = ?)";
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             statement.setString(1, categoryName);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -110,6 +110,29 @@ public class ProductDAO {
             throw new SQLException("Failed to fetch products by category name from the database.", e);
         }
         return products;
+    }
+
+    public void deleteAllProducts() throws SQLException {
+        String query = "DELETE FROM PRODUCTS";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to delete products from the database.", e);
+        }
+    }
+
+    public int getProductId(String productName) throws SQLException {
+        String query = "SELECT ID FROM PRODUCTS WHERE NAME = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, productName);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("ID");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Failed to retrieve the product ID from the database.", e);
+        }
+        throw new IllegalArgumentException("Product not found: " + productName);
     }
 }
 
