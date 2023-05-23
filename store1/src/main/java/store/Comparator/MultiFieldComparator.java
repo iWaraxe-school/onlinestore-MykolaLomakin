@@ -18,6 +18,10 @@ public class MultiFieldComparator implements Comparator<Product> {
         }
     }
 
+    public MultiFieldComparator() {
+        comparators = new LinkedHashMap<>();
+    }
+
     @Override
     public int compare(Product o1, Product o2) {
         for (Comparator<Product> comparator : comparators.values()) {
