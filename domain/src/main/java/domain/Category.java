@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
-    private final String categoryName;
+    private String categoryName;
     private List<Product> productList;
 
     public Category(String categoryName) {
