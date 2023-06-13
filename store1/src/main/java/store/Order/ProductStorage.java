@@ -1,13 +1,17 @@
 package store.Order;
 
 import products.Product;
+import store.database.DBException;
+import store.database.OrderDAO;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ProductStorage {
     private final ConcurrentLinkedQueue<Product> purchasedProductQueue = new ConcurrentLinkedQueue<>();
 
-    private ProductStorage() {
+    public ProductStorage() {
     }
 
     private static class SingletonHelper {
