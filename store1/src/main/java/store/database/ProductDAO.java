@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    private Connection connection;
+    private static Connection connection;
 
     public ProductDAO(Connection connection) {
         this.connection = connection;
@@ -121,7 +121,7 @@ public class ProductDAO {
         }
     }
 
-    public int getProductId(String productName) throws SQLException {
+    public static int getProductId(String productName) throws SQLException {
         String query = "SELECT ID FROM PRODUCTS WHERE NAME = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, productName);

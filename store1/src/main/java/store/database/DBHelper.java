@@ -4,6 +4,7 @@ import domain.Category;
 import org.reflections.Reflections;
 import products.Product;
 import store.Comparator.MultiFieldComparator;
+import store.Order.ProductStorage;
 import store.populator.RandomStorePopulator;
 
 import java.lang.reflect.Constructor;
@@ -12,9 +13,9 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class DBHelper {
-    private ConnectionManager connectionManager;
-    private CategoryDAO categoryDAO;
-    private ProductDAO productDAO;
+    private static ConnectionManager connectionManager;
+    private static CategoryDAO categoryDAO;
+    private static ProductDAO productDAO;
     private OrderDAO orderDAO;
     private final Consumer<String> printCallback;
 
@@ -164,5 +165,75 @@ public class DBHelper {
         }
 
         return categoryToPut;
+    }
+
+    public static String getFilledStore() throws DBException {
+        try {
+            List<Category> categories;
+            List<Product> products;
+
+            try (Connection connection = connectionManager.getConnection()) {
+                categories = categoryDAO.getAllCategories(connection);
+                products = productDAO.getAllProducts(connection);
+            }
+
+            StringBuilder response = new StringBuilder();
+            response.append("\nPrint Store from Database\n");
+            response.append("List of Categories\n");
+            for (Category category : categories) {
+                response.append(category.getCategoryName()).append('\n');
+            }
+
+            response.append("List of Products\n");
+            for (Product product : products) {
+                response.append(product.getName())
+                        .append(", ")
+                        .append(product.getRate())
+                        .append(", ")
+                        .append(product.getPrice())
+                        .append('\n');
+            }
+
+            return response.toString();
+        } catch (SQLException e) {
+            throw new DBException("Failed to print the filled store.", e);
+        }
+    }
+
+    public static String getSortedCategories() throws DBException {
+        try {
+            List<Category> categories;
+
+            try (Connection connection = connectionManager.getConnection()) {
+                categories = categoryDAO.getAllCategories(connection);
+            }
+
+            StringBuilder response = new StringBuilder();
+            for (Category category : categories) {
+                response.append("\nCategory: ").append(category.getCategoryName()).append('\n');
+
+                List<Product> productList;
+                try (Connection connection = connectionManager.getConnection()) {
+                    productList = productDAO.getProductsByCategoryName(category.getCategoryName(), connection);
+                }
+                productList.sort(new MultiFieldComparator(new HashMap<>()));
+                for (Product product : productList) {
+                    response.append(product.toString()).append('\n');
+                }
+            }
+
+            return response.toString();
+        } catch (SQLException e) {
+            throw new DBException("Failed to sort categories.", e);
+        }
+    }
+
+    public void addOrder(int productId, int quantity) throws DBException {
+        try (Connection connection = connectionManager.getConnection()) {
+            OrderDAO orderDAO = new OrderDAO(connection);
+            orderDAO.addOrder(productId, quantity);
+        } catch (SQLException e) {
+            throw new DBException("Failed to add order to the database.", e);
+        }
     }
 }
