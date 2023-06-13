@@ -1,26 +1,25 @@
-# 8. HTTP
-----
-## Materials
-[HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
-[HTTP simple servers (plain java/lib)](https://syntaxcorrect.com/Java/5_Ultra_Lightweight_Http_Server_Implementations_in_Java_for_Blazing_Fast_Microservices_APIs_or_Even_Websites)
-[Basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
-[RestAssured](https://rest-assured.io/)
-## Task #8: Implementing an HTTP Server for Store Management
+# Replace Faker with OpenAI API
+Based on the code you've provided, here's a task description and step-by-step guide for the change you want to implement:
 
-In this task, you will build upon the previous task by implementing an HTTP server to manage your store's categories and products. You will also add the functionality to handle adding products to the cart, and secure the server using basic authentication.
+## Task Description:
 
-### Objective
+The task is to modify the existing Faker library to use the OpenAI API instead for generating random but more relevant values. The OpenAI API is a more powerful tool that can generate more realistic and contextually relevant data. The task involves creating a request builder for the API calls, an OpenAI connector to facilitate communication with the OpenAI API, and implementing the OpenAI random product generator in the store populator class.
 
-1. Implement an HTTP server that handles category and product management using the HTTP protocol.
-2. Implement 'add product to cart' functionality in the server.
-3. Secure the HTTP service with basic authentication (hardcoded credentials are acceptable).
-4. Use either Java's built-in HTTP client or the RestAssured library for the client-side implementation.
+## Step-by-step Guide:
 
-### Subtasks
+1. **RequestBuilder Class**: This class is used to build JSON objects to be sent to the OpenAI API. This class includes methods to set the model, prompt, max tokens, and temperature for the API call. The build method returns a JSON object with these properties.
 
-1. **HTTP Server Setup**: Implement an HTTP server using Java's built-in HTTP server or an external library. The server should be capable of handling requests for adding, updating, retrieving, and deleting categories and products in your store's database.
-2. **Add Product to Cart**: Implement a feature that allows users to add products to their cart using an HTTP request. The server should process this request, update the cart, and return a confirmation message.
-3. **Basic Authentication**: Secure your HTTP server using basic authentication. Hardcoded credentials are acceptable for this task. Ensure that only authenticated users can access the server's features.
-4. **HTTP Client**: Implement the client-side part of your application using either Java's built-in HTTP client or the RestAssured library. The client should be capable of sending requests to the server and processing the server's responses.
+2. **OpenAIConnector Class**: This class is responsible for making the actual API calls to the OpenAI API. It uses the RequestBuilder class to create the JSON objects to be sent to the API. This class also includes methods to generate a product name, product price, and product rate, which use the OpenAI API to generate these values based on the given prompts.
 
-By breaking down the task into these clear and concise subtasks, you will have a better understanding of the requirements and be able to tackle each part of the challenge more effectively. Good luck!
+3. **OpenAIRandomProductGenerator Class**: This class uses the OpenAIConnector to generate a random product. It calls the methods in the OpenAIConnector class to generate a product name, price, and rate, and then creates a new product with these values.
+
+4. **RandomStorePopulator Class**: This class is used to populate the store with random products. Instead of using the original RandomProductGenerator, it uses the OpenAIRandomProductGenerator to generate products. This class also includes a method to create categories for the store and a method to fill the store with random products.
+
+## Additional Notes:
+
+- Ensure to replace the `ORGANIZATION_KEY` and `API_KEY` in the `OpenAIConnector` class with your actual OpenAI keys.
+- The OpenAI API usage may incur costs. Be sure to understand OpenAI's pricing model and adjust the usage accordingly.
+- The `MAX_TOKENS` and `TEMPERATURE` values in the `OpenAIConnector` class may need to be tweaked depending on the desired trade-off between randomness and relevance.
+- Make sure to handle exceptions properly and add necessary validations where required.
+- Always consider the security of your API keys. Never expose them in a public or insecure environment.
+
